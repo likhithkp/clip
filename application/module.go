@@ -1,5 +1,10 @@
 package application
 
-import "go.uber.org/fx"
+import (
+	"github.com/likhithkp/clip/application/auth"
+	"go.uber.org/fx"
+)
 
-var Module = fx.Module("application")
+var Module = fx.Module("application",
+	auth.Module,
+)

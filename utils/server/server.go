@@ -3,8 +3,10 @@ package server
 import (
 	"context"
 	"net/http"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/likhithkp/clip/utils/middleware"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 )
@@ -13,6 +15,8 @@ func NewFiberApp() *fiber.App {
 	app := fiber.New(fiber.Config{
 		BodyLimit: 1024 * 1024 * 10,
 	})
+	app.Use(middleware.TimeoutMiddleware(5 * time.Second))
+
 	return app
 }
 
