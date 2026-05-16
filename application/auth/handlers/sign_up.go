@@ -38,26 +38,26 @@ func (handler *SignUpHandler) SignUp(ctx *fiber.Ctx) error {
 		return handler.utils.Response(ctx, http.StatusBadRequest, false, "Missing fields", nil)
 	}
 	existingUser, err := handler.userRepository.GetUserByEmail(ctx.Context(), newUser.Email)
+	if err != nil {
+		log.Printf("error[SignUp]: %v", err.Error())
+		return handler.utils.Response(ctx, http.StatusInternalServerError, false, "Internal server error", nil)
+	}
 	if existingUser != nil {
 		return handler.utils.Response(ctx, http.StatusConflict, false, "User with the email "+newUser.Email+" already exists", nil)
-	}
-	if err != nil {
-		log.Printf("error: %v", err.Error())
-		return handler.utils.Response(ctx, http.StatusInternalServerError, false, "Internal server error", nil)
 	}
 
 	newUserDomain := convertors.ConvertSignUpDtoToDomain(newUser)
 
 	hashedBytes, err := bcrypt.GenerateFromPassword([]byte(newUserDomain.Password), bcrypt.DefaultCost)
 	if err != nil {
-		log.Printf("error: %v", err.Error())
+		log.Printf("error[SignUp]: %v", err.Error())
 		return handler.utils.Response(ctx, http.StatusInternalServerError, false, "Internal server error", nil)
 	}
 
 	newUserDomain.Password = string(hashedBytes)
 	err = handler.userRepository.UpsertUser(ctx.Context(), newUserDomain)
 	if err != nil {
-		log.Printf("error: %v", err.Error())
+		log.Printf("error[SignUp]: %v", err.Error())
 		return handler.utils.Response(ctx, http.StatusInternalServerError, false, "Internal server error", nil)
 	}
 

@@ -13,9 +13,14 @@ type UserMongoService struct {
 }
 
 func NewUserMongoService(database *mongo.Database) *UserMongoService {
-	return &UserMongoService{
+	service := &UserMongoService{
 		collection: database.Collection("users"),
 	}
+
+	if err := EnsureUserIndexes(service.collection); err != nil {
+		panic("failed to create user indexes: " + err.Error())
+	}
+	return service
 }
 
 func (mongoService *UserMongoService) UpsertUser(ctx context.Context, entity *UserEntity) error {
