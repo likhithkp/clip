@@ -98,7 +98,3 @@ curl -i http://localhost:8080/api/v1/urls/{code}
 - Redirect latency (warm): ~70-90ms
 - Redirect latency (cold start): ~500ms
 - Cache hit: Redis first, MongoDB fallback
-
-## License
-
-MIT
