@@ -9,7 +9,7 @@ var Module = fx.Module("application-auth",
 	fx.Provide(
 		handlers.NewSignUpHandler,
 		handlers.NewSignInHandler,
-		NewAuthController,
+		NewController,
 	),
 	fx.Invoke(RegisterAuthController),
 )

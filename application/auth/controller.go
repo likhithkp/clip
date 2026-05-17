@@ -5,25 +5,25 @@ import (
 	"github.com/likhithkp/clip/application/auth/handlers"
 )
 
-type AuthController struct {
+type Controller struct {
 	signUpHandler *handlers.SignUpHandler
 	signInHandler *handlers.SignInHandler
 }
 
-func NewAuthController(
+func NewController(
 	signUpHandler *handlers.SignUpHandler,
 	signInHandler *handlers.SignInHandler,
-) *AuthController {
-	return &AuthController{
+) *Controller {
+	return &Controller{
 		signUpHandler: signUpHandler,
 		signInHandler: signInHandler,
 	}
 }
 
-func (controller *AuthController) SignUpHandler(ctx *fiber.Ctx) error {
+func (controller *Controller) SignUpHandler(ctx *fiber.Ctx) error {
 	return controller.signUpHandler.SignUp(ctx)
 }
 
-func (controller *AuthController) SignInHandler(ctx *fiber.Ctx) error {
+func (controller *Controller) SignInHandler(ctx *fiber.Ctx) error {
 	return controller.signInHandler.SignIn(ctx)
 }
