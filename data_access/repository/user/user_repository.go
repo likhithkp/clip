@@ -40,3 +40,16 @@ func (repository *UserRepository) GetUserByEmail(ctx context.Context, email stri
 
 	return convertor.EntityToDomain(entity), nil
 }
+
+func (repository *UserRepository) GetUserById(ctx context.Context, id string) (domain *user.UserDomain, err error) {
+	entity, err := repository.userMongoService.GetUserById(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if entity == nil {
+		return nil, nil
+	}
+
+	return convertor.EntityToDomain(entity), nil
+}

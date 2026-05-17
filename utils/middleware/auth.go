@@ -3,21 +3,27 @@ package middleware
 import (
 	"strings"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/likhithkp/clip/utils/jwt"
 	"github.com/likhithkp/clip/utils/other"
-
-	"github.com/gofiber/fiber/v2"
 )
 
 func AuthMiddleware(jwtManager *jwt.GenerateJwtTokenManager, utils *other.ResponseStruct) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		authHeader := c.Get("Authorization")
-		if authHeader == "" {
+		token := c.Cookies("auth_token")
+
+		if token == "" {
+			authHeader := c.Get("Authorization")
+			if strings.HasPrefix(authHeader, "Bearer ") {
+				token = strings.TrimPrefix(authHeader, "Bearer ")
+			}
+		}
+
+		if token == "" {
 			return utils.Response(c, fiber.StatusUnauthorized, false, "Missing auth token", nil)
 		}
 
-		tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
-		claims, err := jwtManager.ValidateJWT(tokenStr)
+		claims, err := jwtManager.ValidateJWT(token)
 		if err != nil {
 			return utils.Response(c, fiber.StatusUnauthorized, false, "Invalid or expired token", nil)
 		}

@@ -62,8 +62,17 @@ func (handler *SignInHandler) SignIn(ctx *fiber.Ctx) error {
 		return handler.utils.Response(ctx, http.StatusInternalServerError, false, "Internal server error", nil)
 	}
 
+	ctx.Cookie(&fiber.Cookie{
+		Name:     "auth_token",
+		Value:    token,
+		HTTPOnly: true,
+		Secure:   false,
+		SameSite: "Lax",
+		MaxAge:   86400,
+		Path:     "/",
+	})
+
 	return handler.utils.Response(ctx, http.StatusOK, true, "Sign in successful", fiber.Map{
-		"id":    existingUser.Id,
-		"token": token,
+		"id": existingUser.Id,
 	})
 }
