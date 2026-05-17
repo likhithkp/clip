@@ -15,6 +15,9 @@ type Env struct {
 	DbName        string
 	DeploymentEnv string
 	JwtSecretKey  string
+	RedisAddress  string
+	RedisPassword string
+	RedisUsername string
 }
 
 func GetEnv() (*Env, error) {
@@ -46,11 +49,28 @@ func GetEnv() (*Env, error) {
 		return nil, errors.New("JWT_SECRET not provided")
 	}
 
+	redisAddress := os.Getenv("REDIS_ADDR")
+	if len(jwtSecretKey) == 0 {
+		return nil, errors.New("REDIS_ADDR not provided")
+	}
+
+	redisPassword := os.Getenv("REDIS_PASSWORD")
+	if len(jwtSecretKey) == 0 {
+		return nil, errors.New("REDIS_PASSWORD not provided")
+	}
+
+	redisUsername := os.Getenv("REDIS_USERNAME")
+	if len(jwtSecretKey) == 0 {
+		return nil, errors.New("REDIS_USERNAME not provided")
+	}
 	return &Env{
 		Port:          port,
 		MongodbUri:    mongodbUri,
 		DbName:        dbName,
 		DeploymentEnv: deploymentEnv,
 		JwtSecretKey:  jwtSecretKey,
+		RedisAddress:  redisAddress,
+		RedisPassword: redisPassword,
+		RedisUsername: redisUsername,
 	}, nil
 }
